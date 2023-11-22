@@ -1,6 +1,8 @@
 const express = require("express");
 const path = require("path");
 const expressLayouts = require("express-ejs-layouts");
+// The GLOBAL ERROR HANDLER
+const globalErrorHandler = require("./controllers/errorhandler");
 
 // routes
 const userRoutes = require("./routes/userRoutes");
@@ -21,6 +23,7 @@ app.use(express.json({ limit: "10kb" }));
 app.use("/", viewRoutes);
 app.use("/api/v1/users", userRoutes);
 
+// if other route unspecified route is hit then it goes to this!
 app.all("*", (req, res, next) => {
   next(new APPError(`Can not find ${req.method} ${req.originalUrl}`, 404));
 });

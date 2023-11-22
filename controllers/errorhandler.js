@@ -1,4 +1,4 @@
-const APPError = removeEventListener("./utils/apperror");
+const APPError = require("./../utils/apperror");
 
 const handleCastErrorDB = (err) => {
   const message = `Invalid ${err.path}: ${err.value}.`;
