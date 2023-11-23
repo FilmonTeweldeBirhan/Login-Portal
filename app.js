@@ -1,31 +1,29 @@
 const express = require("express");
 const path = require("path");
 const expressLayouts = require("express-ejs-layouts");
-// The GLOBAL ERROR HANDLER
-const globalErrorHandler = require("./controllers/errorhandler");
-
-// modules
 const passport = require("passport");
 const flash = require("connect-flash");
 const session = require("express-session");
+// routes
+const userRoutes = require("./routes/userRoutes");
+const viewRoutes = require("./routes/viewRoutes");
+// The GLOBAL ERROR HANDLER
+const globalErrorHandler = require("./controllers/errorhandler");
 
 const app = express();
 
 app.use(
   session({
-    secret: "keyboard cat",
-    resave: false,
+    secret: process.env.SESSION_SECRET,
+    resave: true,
     saveUninitialized: true,
   })
 );
 
-// routes
-const userRoutes = require("./routes/userRoutes");
-const viewRoutes = require("./routes/viewRoutes");
-
 // setting ejs layout
 app.use(expressLayouts);
 app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
 // serving static files
 app.use(express.static(path.join(__dirname, "public")));
