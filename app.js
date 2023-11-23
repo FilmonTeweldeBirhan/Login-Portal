@@ -9,6 +9,8 @@ const passport = require("passport");
 const flash = require("connect-flash");
 const session = require("express-session");
 
+const app = express();
+
 app.use(
   session({
     secret: "keyboard cat",
@@ -20,8 +22,6 @@ app.use(
 // routes
 const userRoutes = require("./routes/userRoutes");
 const viewRoutes = require("./routes/viewRoutes");
-
-const app = express();
 
 // setting ejs layout
 app.use(expressLayouts);
