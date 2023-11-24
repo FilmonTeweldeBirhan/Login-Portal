@@ -4,6 +4,6 @@ build using -MVC archtecture
             -Nodejs
             -express(as nodejs framework)
             -mongodb(with mongoose)
-            -ejs as a server side renderer
+            -pug as a server side renderer
             -passport for authentication
             -passport-local for local-strategy...
