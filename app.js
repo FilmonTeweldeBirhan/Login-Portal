@@ -1,28 +1,28 @@
 const express = require("express");
 const path = require("path");
-const expressLayouts = require("express-ejs-layouts");
+// const expressLayouts = require("express-ejs-layouts");
+const session = require("express-session");
 const passport = require("passport");
 const flash = require("connect-flash");
-const session = require("express-session");
 // routes
-const userRoutes = require("./routes/userRoutes");
-const viewRoutes = require("./routes/viewRoutes");
+const userRouter = require("./routes/userRoutes");
+const viewRouter = require("./routes/viewRoutes");
 // The GLOBAL ERROR HANDLER
 const globalErrorHandler = require("./controllers/errorhandler");
+const APPError = require("./utils/apperror");
 
 const app = express();
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true,
-  })
-);
+// passport config
+require("./controllers/auth")(passport);
 
 // setting ejs layout
-app.use(expressLayouts);
-app.set("view engine", "ejs");
+// app.use(expressLayouts);
+// app.set("view engine", "ejs");
+// app.set("views", path.join(__dirname, "views"));
+
+// setting pug
+app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 
 // serving static files
@@ -41,6 +41,8 @@ app.use(
   })
 );
 
+app.use(passport.authenticate("session"));
+
 // Passport Middleware
 app.use(passport.initialize());
 app.use(passport.session());
@@ -50,15 +52,15 @@ app.use(flash());
 
 // Global flash variables
 app.use((req, res, next) => {
-  req.locals.success_msg = req.flash("success_msg");
-  req.locals.error_msg = req.flash("error_msg");
-  req.locals.error = req.flash("error");
+  res.locals.success_msg = req.flash("success_msg");
+  res.locals.error_msg = req.flash("error_msg");
+  res.locals.error = req.flash("error");
 
   next();
 });
 
-app.use("/", viewRoutes);
-app.use("/api/v1/users", userRoutes);
+app.use("/", viewRouter);
+app.use("/api/v1/users", userRouter);
 
 // if other route unspecified route is hit then it goes to this!
 app.all("*", (req, res, next) => {
